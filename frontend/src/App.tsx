@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import PrivateRoute from "./utils/PrivateRoute";
+import { AuthProvider } from "./context/AuthContext";
 
-function App() {
-  const [count, setCount] = useState(0)
+import Layout from "./components/Layout";
+import HomePage from "./pages/HomePage";
+import RegisterPage from "./pages/Auth/RegisterPage";
+import LoginPage from "./pages/Auth/LoginPage";
+import Dashboard from "./pages/Auth/Dashboard";
+import CoursesPage from "./pages/courses/CoursesPage";
+import CourseDetailsPage from "./pages/courses/CourseDetailsPage ";
+import UserProfilePage from "./pages/Auth/UserProfilePage";
 
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1 className='bg-sky-100'>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Router>
+      <AuthProvider>
+        <Routes>
+         <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>}/>  
+          <Route path="/allcourses" element={<PrivateRoute><CoursesPage/></PrivateRoute>}/> 
+          
+          <Route path="/courses/:courseId" element={<PrivateRoute><CourseDetailsPage/></PrivateRoute>}/> 
+          <Route path="/users/:userId" element={<PrivateRoute><UserProfilePage/></PrivateRoute>}/> 
+         
+        </Route>
+        </Routes>
+      
+      </AuthProvider>
+    </Router>
+  );
 }
-
-export default App
